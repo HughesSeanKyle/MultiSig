@@ -1,0 +1,27 @@
+{
+  "name": "my-multiSigWallet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HughesSeanKyle/MultiSig.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HughesSeanKyle/MultiSig/issues"
+  },
+  "homepage": "https://github.com/HughesSeanKyle/MultiSig#readme",
+  "devDependencies": {
+    "chai": "^4.3.0",
+    "chai-as-promised": "^7.1.1"
+  }
+}
