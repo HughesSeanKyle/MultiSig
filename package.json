@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "truffle test"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,10 @@
   },
   "homepage": "https://github.com/HughesSeanKyle/MultiSig#readme",
   "devDependencies": {
+    "@truffle/hdwallet-provider": "^1.2.2",
     "chai": "^4.3.0",
-    "chai-as-promised": "^7.1.1"
-  }
+    "chai-as-promised": "^7.1.1",
+    "truffle": "^5.1.66"
+  },
+  "dependencies": {}
 }
