@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.0 <0.9.0;
+pragma solidity ^0.6.12;
 
 contract MultiSigWallet {
     event Deposit(address indexed sender, uint256 amount, uint256 balance);
