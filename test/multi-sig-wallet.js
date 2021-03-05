@@ -27,9 +27,9 @@ contract("MultiSigWallet", accounts => {
           await wallet.confirmTransaction(0, { from: owners[1] })
         })
     
-        it("should execute", async () => {
+        it("should execute a transaction", async () => {
           const { logs } = await wallet.executeTransaction(0)
-          // console.log(logs)
+          console.log(logs)
           assert.equal(logs[0].event, "ExecuteTransaction")
           assert.equal(logs[0].args.owner, owners[0])
           assert.equal(logs[0].args.txIndex, 0)
@@ -37,6 +37,17 @@ contract("MultiSigWallet", accounts => {
           const tx = await wallet.getTransaction(0)
           assert.equal(tx.executed, true)
         })
+
+        // test execute TRX function => should fail if already executed
+        it("should reject transaction if already excuted", async () => {
+          await wallet.executeTransaction(0, { from: owners[0] });
+
+          try {
+            await wallet.executeTransaction(0, { from: owners[0] })
+            throw new Error("tx did not fail")
+          } catch (error) {
+            assert.equal(error.reason, "tx already executed")
+          };
+        });
     });
-    // test execute TRX function => should fail if already executed
 });
