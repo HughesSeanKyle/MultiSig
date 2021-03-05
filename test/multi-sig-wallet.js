@@ -1,7 +1,7 @@
-const { assert } = require("chai");
-const chai = require("chai");
+const chai = require("chai")
+chai.use(require("chai-as-promised"))
 
-chai.use(require("chai-as-promised"));
+const expect = chai.expect
 
 const MultiSigWallet = artifacts.require("MultiSigWallet");
 
@@ -49,5 +49,18 @@ contract("MultiSigWallet", accounts => {
             assert.equal(error.reason, "tx already executed")
           };
         });
+
+        // test execute TRX function => should fail if already executed - (Using expect)
+        it("should reject if already executed", async () => {
+          await wallet.executeTransaction(0, {
+            from: owners[0],
+          })
+    
+          await expect(
+            wallet.executeTransaction(0, {
+              from: owners[0],
+            })
+          ).to.be.rejected
+        })
     });
 });
