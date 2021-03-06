@@ -39,6 +39,17 @@ contract("MultiSigWallet", accounts => {
           assert.equal(tx.executed, true)
         })
 
+        // Should execute trx (using expect) 
+        it("should execute a transaction, (expect)", async () => {
+          const { logs } = await wallet.executeTransaction(0)
+          expect(logs[0].event).to.equal("ExecuteTransaction");
+          expect(logs[0].args.owner).to.equal(owners[0]);
+          
+    
+          const tx = await wallet.getTransaction(0)
+          expect(tx.executed).to.equal(true);
+        })
+
         // test execute TRX function => should fail if already executed
         it("should reject transaction if already excuted", async () => {
           await wallet.executeTransaction(0, { from: owners[0] });
