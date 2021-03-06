@@ -17,9 +17,10 @@ contract("MultiSigWallet", accounts => {
 
     // test execute TRX function => should succeed/execute
     describe("executeTransaction", () => {
-        const to = accounts[3]
-        const value = 0
-        const data = "0x0"
+        const to = accounts[3];
+        const notOwner = accounts[4];
+        const value = 0;
+        const data = "0x0";
     
         beforeEach(async () => {
           await wallet.submitTransaction(to, value, data)
@@ -59,6 +60,14 @@ contract("MultiSigWallet", accounts => {
           await expect(
             wallet.executeTransaction(0, {
               from: owners[0],
+            })
+          ).to.be.rejected
+        })
+
+        it("should reject if not the owner", async () => {
+          await expect(
+            wallet.executeTransaction(0, {
+              from : accounts[3],
             })
           ).to.be.rejected
         })
