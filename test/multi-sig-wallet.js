@@ -71,5 +71,13 @@ contract("MultiSigWallet", accounts => {
             })
           ).to.be.rejected
         })
+
+        it("should reject if trx does not exist", async () => {
+          await expect(
+            wallet.executeTransaction(1, {
+              from : owners[0],
+            })
+          ).to.be.rejected
+        })
     });
 });
