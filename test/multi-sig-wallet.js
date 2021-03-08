@@ -18,7 +18,6 @@ contract("MultiSigWallet", accounts => {
     // test execute TRX function => should succeed/execute
     describe("executeTransaction", () => {
         const to = accounts[3];
-        const notOwner = accounts[4];
         const value = 0;
         const data = "0x0";
     
@@ -29,8 +28,8 @@ contract("MultiSigWallet", accounts => {
         })
     
         it("should execute a transaction", async () => {
+          // console.log(logs)
           const { logs } = await wallet.executeTransaction(0)
-          console.log(logs)
           assert.equal(logs[0].event, "ExecuteTransaction")
           assert.equal(logs[0].args.owner, owners[0])
           assert.equal(logs[0].args.txIndex, 0)
@@ -90,5 +89,19 @@ contract("MultiSigWallet", accounts => {
             })
           ).to.be.rejected
         })
+    });
+
+    describe("constructor", () => {
+      it("should deploy a contract", async () => { 
+
+        for (let i = 0; i < owners.length; i++) {
+          assert.equal(await wallet.owners(i), owners[i])
+        }
+  
+        assert.equal(
+          await wallet.numConfirmationsRequired(),
+          NUM_CONFIRMATIONS_REQUIRED
+        )
+      })    
     });
 });
