@@ -127,6 +127,10 @@ contract MultiSigWallet {
 
     // READ transaction data
 
+    function getOwners() public view returns (address[] memory) {
+        return owners;
+    }
+
     function getTransactionCount() public view returns (uint256) {
         return transactions.length;
     }
@@ -164,7 +168,8 @@ contract MultiSigWallet {
         return transaction.isConfirmed[_owner];
     }
 
-    function getBalance() public view returns (uint256) {
+    function getBalance() public payable returns (uint256) {
+        emit Deposit(msg.sender, msg.value, address(this).balance);
         return address(this).balance;
     }
 

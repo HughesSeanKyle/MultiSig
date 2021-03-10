@@ -1,9 +1,10 @@
-const chai = require("chai")
-chai.use(require("chai-as-promised"))
-
-const expect = chai.expect
-
 const MultiSigWallet = artifacts.require("MultiSigWallet");
+
+const chai = require("./setupchai")
+const expect = chai.expect
+const BN = web3.utils.BN;
+
+chai.use(require("chai-as-promised"))
 
 contract("MultiSigWallet", accounts => {
   // Set up for each test
@@ -15,8 +16,7 @@ contract("MultiSigWallet", accounts => {
       wallet = await MultiSigWallet.new(owners, NUM_CONFIRMATIONS_REQUIRED);
   });
 
-  // Testing Constructor Function
-  /*
+  // // Testing Constructor Function, Setup Tests
   describe("constructor", () => {
     it("should deploy a contract", async () => { 
  
@@ -45,10 +45,8 @@ contract("MultiSigWallet", accounts => {
       ).to.be.rejected
     });
   });
-  */
 
-  // Testing Fallback Function
-  /*
+  // // Testing Fallback Function
   describe("fallback", async () => {
     it("should receive ether", async () => {
       const { logs } = await wallet.sendTransaction({
@@ -60,16 +58,15 @@ contract("MultiSigWallet", accounts => {
       assert.equal(logs[0].args.sender, accounts[0])
       assert.equal(logs[0].args.amount, 1)
       assert.equal(logs[0].args.balance, 1)
-    })
-  })
-  */
+    });
+  });
 
+  // CREATE TRX TESTS
   // Testing Submit Trx function
-  /*
   describe("submitTransaction", () => {
-    const to = accounts[3]
-    const value = 0
-    const data = "0x0123"
+    const to = accounts[3];
+    const value = 0;
+    const data = "0x0123";
 
     it("should submit transaction", async () => {
       const { logs } = await wallet.submitTransaction(to, value, data, {
@@ -91,7 +88,7 @@ contract("MultiSigWallet", accounts => {
       assert.equal(tx.data, data)
       assert.equal(tx.numConfirmations, 0)
       assert.equal(tx.executed, false)
-    })
+    });
 
     it("should reject if not owner", async () => {
       await expect(
@@ -99,20 +96,57 @@ contract("MultiSigWallet", accounts => {
           from: accounts[3],
         })
       ).to.be.rejected
-    })
-  })
-  */
+    });
+  });
+  
+  
+  // READ TRX TESTS
+  // Testing getOwners Function
+  describe("getOwners", () => {
+    it("should return owners", async () => {
+      const res = await wallet.getOwners();
 
-  // Testing Confirm Trx Function
-  /*
+      for (let i = 0; i < res.length; i++) {
+        assert.equal(res[i], owners[i])
+      }
+    });
+  });
+
+  // Testing getTrxCount Function
+  describe("getTransactionCount", () => {
+    it("should return tx count", async () => {
+      assert.equal(await wallet.getTransactionCount(), 0)
+    });
+  });
+
+//***  // Testing getBalance Funtion
+  describe("getBalance", () => {
+    // const to = accounts[3];
+    // const value = 0;
+    it("should be able to receive Eth", async () => {
+      const expectedContractBal = web3.utils.toBN(10);
+      const startContractBal = web3.utils.toBN(0);
+      const { logs } = await wallet.send(10, {from: accounts[0]});
+      // console.log(logs[0]);
+
+
+      expect(logs[0].args.balance).to.exist;
+      expect(logs[0].args.balance).to.eql(expectedContractBal);
+    });
+  });
+  
+
+  // UPDATE TRX TESTS
+  
+  // // Testing Confirm Trx Function
   describe("confirmTransaction", () => {
     beforeEach(async () => {
-      const to = accounts[3]
-      const value = 0
-      const data = "0x0123"
+      const to = accounts[3];
+      const value = 0;
+      const data = "0x0123";
 
       await wallet.submitTransaction(to, value, data)
-    })
+    });
 
     it("should confirm", async () => {
       const { logs } = await wallet.confirmTransaction(0, {
@@ -125,7 +159,7 @@ contract("MultiSigWallet", accounts => {
 
       const tx = await wallet.getTransaction(0)
       assert.equal(tx.numConfirmations, 1)
-    })
+    });
 
     it("should reject if not owner", async () => {
       await expect(
@@ -133,7 +167,7 @@ contract("MultiSigWallet", accounts => {
           from: accounts[3],
         })
       ).to.be.rejected
-    })
+    });
 
     it("should reject if tx does not exist", async () => {
       await expect(
@@ -141,7 +175,7 @@ contract("MultiSigWallet", accounts => {
           from: owners[0],
         })
       ).to.be.rejected
-    })
+    });
 
     it("should reject if already confirmed", async () => {
       await wallet.confirmTransaction(0, {
@@ -153,12 +187,10 @@ contract("MultiSigWallet", accounts => {
           from: owners[0],
         })
       ).to.be.rejected
-    })
-  })
-  */
+    });
+  });
   
-  // Testing execute Trx Function
-  /*
+  // // Testing execute Trx Function
   describe("executeTransaction", () => {
       const to = accounts[3];
       const value = 0;
@@ -228,11 +260,9 @@ contract("MultiSigWallet", accounts => {
           })
         ).to.be.rejected
       });
-
   });
-  */
-
-  // Testing revokeConfirmation Function 
+  
+  // // Testing revokeConfirmation Function 
   describe("revokeConfirmation", async () => {
     beforeEach(async () => {
       const to = accounts[3]
@@ -256,7 +286,7 @@ contract("MultiSigWallet", accounts => {
 
       const tx = await wallet.getTransaction(0)
       assert.equal(tx.numConfirmations, 0)
-    })
+    });
 
     it("should reject if not owner", async () => {
       await expect(
@@ -264,7 +294,7 @@ contract("MultiSigWallet", accounts => {
           from: accounts[3],
         })
       ).to.be.rejected
-    })
+    });
 
     it("should reject if tx does not exist", async () => {
       await expect(
@@ -272,6 +302,6 @@ contract("MultiSigWallet", accounts => {
           from: owners[0],
         })
       ).to.be.rejected
-    })
-  })
+    });
+  });
 });
