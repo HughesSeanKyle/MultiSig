@@ -4,7 +4,7 @@ const chai = require("./setupchai")
 const expect = chai.expect
 const BN = web3.utils.BN;
 
-chai.use(require("chai-as-promised"))
+// chai.use(require("chai-as-promised"))
 
 contract("MultiSigWallet", accounts => {
   // Set up for each test
@@ -119,19 +119,15 @@ contract("MultiSigWallet", accounts => {
     });
   });
 
-//***  // Testing getBalance Funtion
+  // Testing getBalance Funtion
   describe("getBalance", () => {
-    // const to = accounts[3];
-    // const value = 0;
     it("should be able to receive Eth", async () => {
-      const expectedContractBal = web3.utils.toBN(10);
-      const startContractBal = web3.utils.toBN(0);
       const { logs } = await wallet.send(10, {from: accounts[0]});
-      // console.log(logs[0]);
-
-
-      expect(logs[0].args.balance).to.exist;
-      expect(logs[0].args.balance).to.eql(expectedContractBal);
+      const balance = logs[0].args.balance;
+      const expectedContractBal = web3.utils.toBN(10);
+      
+      expect(balance).to.exist;
+      expect(balance).to.eql(expectedContractBal);
     });
   });
   
@@ -203,7 +199,6 @@ contract("MultiSigWallet", accounts => {
       });
   
       it("should execute a transaction", async () => {
-        // console.log(logs)
         const { logs } = await wallet.executeTransaction(0)
         assert.equal(logs[0].event, "ExecuteTransaction")
         assert.equal(logs[0].args.owner, owners[0])
@@ -213,7 +208,7 @@ contract("MultiSigWallet", accounts => {
         assert.equal(tx.executed, true)
       });
  
-      it("should execute a transaction, (expect)", async () => {
+      it("should execute a transaction", async () => {
         const { logs } = await wallet.executeTransaction(0)
         expect(logs[0].event).to.equal("ExecuteTransaction");
         expect(logs[0].args.owner).to.equal(owners[0]);

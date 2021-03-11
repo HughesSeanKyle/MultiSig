@@ -255,6 +255,12 @@ contract MultiSigWallet {
         emit RevokeConfirmation(msg.sender, _txIndex);
     }
 
+    /*
+    Below trx will not delete trx itself as submitTransaction function is stored on the blockchain via memory. Once submitTransaction function is executed the trx is mined. 
+
+    The below function will only set all values to default values.  
+    */
+
     // DELETE
     function deleteTransaction(uint256 _txIndex, bytes memory _data)
         public
